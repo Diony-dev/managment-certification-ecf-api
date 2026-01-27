@@ -9,6 +9,7 @@ def create_ecf():
     try:
         # Instanciamos el builder adecuado usando el Factory
         builder = ECFBuilderFactory.get_builder(json_data)
+        app.logger.info(f"Builder creado: {json_data}")
         
         # Construimos el árbol
         builder.build()
