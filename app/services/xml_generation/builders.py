@@ -43,7 +43,7 @@ class ECF34Builder(ECF33Builder):
         id_doc = etree.SubElement(encabezado_node, "IdDoc")
         
         etree.SubElement(id_doc, "TipoeCF").text = str(id_doc_data['TipoeCF'])
-        etree.SubElement(id_doc, "eNCF").text = id_doc_data['ENCF']
+        etree.SubElement(id_doc, "eNCF").text = id_doc_data['eNCF']
         
         indicador = id_doc_data.get('IndicadorNotaCredito', 0)
         etree.SubElement(id_doc, "IndicadorNotaCredito").text = str(indicador)

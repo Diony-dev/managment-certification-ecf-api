@@ -7,7 +7,7 @@ def get_base_mock_data(tipo_ecf, encf):
         "Encabezado": {
             "IdDoc": {
                 "TipoeCF": tipo_ecf,
-                "ENCF": encf,
+                "eNCF": encf,
                 "IndicadorMontoGravado": 0,
                 "TipoIngresos": 1,
                 "TipoPago": 1,

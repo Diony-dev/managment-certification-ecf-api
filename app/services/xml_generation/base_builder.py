@@ -146,16 +146,14 @@ class BaseECFBuilder:
             etree.SubElement(totales, "MontoGravadoI2").text = self._fmt_dec(totales_data['MontoGravadoI2'])
         if 'MontoExento' in totales_data:
             etree.SubElement(totales, "MontoExento").text = self._fmt_dec(totales_data['MontoExento'])
-            
-        etree.SubElement(totales, "TotalITBIS").text = self._fmt_dec(totales_data['TotalITBIS'])
-        
+        if 'TotalITBIS' in totales_data:
+            etree.SubElement(totales, "TotalITBIS").text = self._fmt_dec(totales_data['TotalITBIS'])
         if 'TotalITBIS1' in totales_data:
             etree.SubElement(totales, "TotalITBIS1").text = self._fmt_dec(totales_data['TotalITBIS1'])
         if 'TotalITBIS2' in totales_data:
             etree.SubElement(totales, "TotalITBIS2").text = self._fmt_dec(totales_data['TotalITBIS2'])
-            
-        etree.SubElement(totales, "MontoTotal").text = self._fmt_dec(totales_data['MontoTotal'])
-        
+        if 'MontoTotal' in totales_data:
+            etree.SubElement(totales, "MontoTotal").text = self._fmt_dec(totales_data['MontoTotal'])
         if 'MontoNoFacturable' in totales_data:
             etree.SubElement(totales, "MontoNoFacturable").text = self._fmt_dec(totales_data['MontoNoFacturable'])
         if 'MontoPeriodo' in totales_data:
