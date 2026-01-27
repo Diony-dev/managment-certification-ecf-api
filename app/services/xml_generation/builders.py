@@ -50,9 +50,10 @@ class ECF34Builder(ECF33Builder):
 
         if 'IndicadorMontoGravado' in id_doc_data:
             etree.SubElement(id_doc, "IndicadorMontoGravado").text = str(id_doc_data['IndicadorMontoGravado'])
-            
-        etree.SubElement(id_doc, "TipoIngresos").text = str(id_doc_data['TipoIngresos'])
-        etree.SubElement(id_doc, "TipoPago").text = str(id_doc_data['TipoPago'])
+        if 'TipoIngresos' in id_doc_data:
+            etree.SubElement(id_doc, "TipoIngresos").text = str(id_doc_data['TipoIngresos'])
+        if 'TipoPago' in id_doc_data:
+            etree.SubElement(id_doc, "TipoPago").text = str(id_doc_data['TipoPago'])
         
         if 'FechaLimitePago' in id_doc_data:
             etree.SubElement(id_doc, "FechaLimitePago").text = self._fmt_date(id_doc_data['FechaLimitePago'])
@@ -97,7 +98,20 @@ class ECF41Builder(BaseECF4xBuilder):
 
 class ECF43Builder(BaseECF4xBuilder):
     """Gastos Menores Electrónico (43)"""
-    pass
+    def _build_id_doc(self, encabezado_node):
+        id_doc_data = self.data['Encabezado']['IdDoc']
+        id_doc = etree.SubElement(encabezado_node, "IdDoc")
+        
+        etree.SubElement(id_doc, "TipoeCF").text = str(id_doc_data['TipoeCF'])
+        etree.SubElement(id_doc, "eNCF").text = id_doc_data['eNCF']
+        
+        etree.SubElement(id_doc, "FechaVencimientoSecuencia").text = self._fmt_date(id_doc_data['FechaVencimientoSecuencia'])
+        
+        if 'TipoPago' in id_doc_data:
+             etree.SubElement(id_doc, "TipoPago").text = str(id_doc_data['TipoPago'])
+             
+        if 'TotalPaginas' in id_doc_data:
+             etree.SubElement(id_doc, "TotalPaginas").text = str(id_doc_data['TotalPaginas'])
 
 class ECF44Builder(BaseECF4xBuilder):
     """Regímenes Especiales Electrónico (44)"""
