@@ -75,7 +75,25 @@ class BaseECF4xBuilder(BaseECFBuilder):
 
 class ECF41Builder(BaseECF4xBuilder):
     """Compras Electrónico (41)"""
-    pass
+    def _build_id_doc(self, encabezado_node):
+        id_doc_data = self.data['Encabezado']['IdDoc']
+        id_doc = etree.SubElement(encabezado_node, "IdDoc")
+        
+        etree.SubElement(id_doc, "TipoeCF").text = str(id_doc_data['TipoeCF'])
+        etree.SubElement(id_doc, "eNCF").text = id_doc_data['eNCF']
+        
+        etree.SubElement(id_doc, "FechaVencimientoSecuencia").text = self._fmt_date(id_doc_data['FechaVencimientoSecuencia'])
+        
+        if 'IndicadorMontoGravado' in id_doc_data:
+             etree.SubElement(id_doc, "IndicadorMontoGravado").text = str(id_doc_data['IndicadorMontoGravado'])
+             
+        if 'TipoPago' in id_doc_data:
+             etree.SubElement(id_doc, "TipoPago").text = str(id_doc_data['TipoPago'])
+             
+        if 'FechaLimitePago' in id_doc_data:
+             etree.SubElement(id_doc, "FechaLimitePago").text = self._fmt_date(id_doc_data['FechaLimitePago'])
+             
+        # TerminoPago, TablaFormasPago, etc (Optional fields, adding basics for now)
 
 class ECF43Builder(BaseECF4xBuilder):
     """Gastos Menores Electrónico (43)"""

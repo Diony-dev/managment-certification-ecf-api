@@ -101,12 +101,22 @@ def test_builder(tipo, name):
         else:
             print("  FAIL: TipoeCF mismatch")
             
+        if tipo == 41:
+            if 'TipoIngresos' in data['Encabezado']['IdDoc']:
+                del data['Encabezado']['IdDoc']['TipoIngresos']
+
         import re
-        # Verify TipoIngresos format (01, etc)
-        if re.search(r"<TipoIngresos>0[1-6]</TipoIngresos>", xml_str):
-             print("  OK: TipoIngresos format corrected (01..06)")
+        # Verify TipoIngresos format (01, etc) - Skip for 41
+        if tipo != 41:
+            if re.search(r"<TipoIngresos>0[1-6]</TipoIngresos>", xml_str):
+                 print("  OK: TipoIngresos format corrected (01..06)")
+            else:
+                 print("  FAIL: TipoIngresos format incorrect (likely single digit)")
         else:
-             print("  FAIL: TipoIngresos format incorrect (likely single digit)")
+             if "<TipoIngresos>" not in xml_str:
+                 print("  OK: TipoIngresos correctly absent for ECF 41")
+             else:
+                 print("  FAIL: TipoIngresos present for ECF 41")
 
         # Verify FechaHoraFirma format: DD-MM-YYYY HH:MM:SS
         if re.search(r"\d{2}-\d{2}-\d{4} \d{2}:\d{2}:\d{2}", xml_str):
