@@ -165,6 +165,21 @@ class ECF46Builder(BaseECF4xBuilder):
 class ECF47Builder(BaseECF4xBuilder):
     """Comprobante para Pagos al Exterior Electrónico (47)"""
     
+    def _build_id_doc(self, encabezado_node):
+        id_doc_data = self.data['Encabezado']['IdDoc']
+        id_doc = etree.SubElement(encabezado_node, "IdDoc")
+        
+        etree.SubElement(id_doc, "TipoeCF").text = str(id_doc_data['TipoeCF'])
+        etree.SubElement(id_doc, "eNCF").text = id_doc_data['eNCF']
+        
+        etree.SubElement(id_doc, "FechaVencimientoSecuencia").text = self._fmt_date(id_doc_data['FechaVencimientoSecuencia'])
+        
+        if 'TipoPago' in id_doc_data:
+             etree.SubElement(id_doc, "TipoPago").text = str(id_doc_data['TipoPago'])
+             
+        if 'FechaLimitePago' in id_doc_data:
+             etree.SubElement(id_doc, "FechaLimitePago").text = self._fmt_date(id_doc_data['FechaLimitePago'])
+
     def _build_detalles_item_extensions(self, item_node, item_data):
         # Mandatory Retencion in Item for ECF 47
         if 'Retencion' in item_data:

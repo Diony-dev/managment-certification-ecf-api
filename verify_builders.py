@@ -101,13 +101,13 @@ def test_builder(tipo, name):
         else:
             print("  FAIL: TipoeCF mismatch")
             
-        if tipo == 41 or tipo == 43:
+        if tipo in [41, 43, 47]:
             if 'TipoIngresos' in data['Encabezado']['IdDoc']:
                 del data['Encabezado']['IdDoc']['TipoIngresos']
 
         import re
-        # Verify TipoIngresos format (01, etc) - Skip for 41 and 43
-        if tipo not in [41, 43]:
+        # Verify TipoIngresos format (01, etc) - Skip for 41, 43, 47
+        if tipo not in [41, 43, 47]:
             if re.search(r"<TipoIngresos>0[1-6]</TipoIngresos>", xml_str):
                  print("  OK: TipoIngresos format corrected (01..06)")
             else:
