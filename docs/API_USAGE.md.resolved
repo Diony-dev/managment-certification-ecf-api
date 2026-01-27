@@ -1,0 +1,172 @@
+# ECF Generation API Documentation
+
+This API allows you to generate compliant XML for Dominican Republic Electronic Invoices (e-CF) by sending a JSON payload.
+
+## Endpoint
+
+- **URL**: `/ecf/ecf`
+- **Method**: `POST`
+- **Content-Type**: `application/json`
+
+## Supported Types
+The API supports generation for the following e-CF types:
+
+| Tipo | Descripción |
+|------|-------------|
+| **31** | Factura de Crédito Fiscal |
+| **32** | Factura de Consumo |
+| **33** | Nota de Débito |
+| **34** | Nota de Crédito |
+| **41** | Compras |
+| **43** | Gastos Menores |
+| **44** | Regímenes Especiales |
+| **45** | Gubernamental |
+| **46** | Exportaciones |
+| **47** | Pagos al Exterior |
+
+## Request Structure
+
+The JSON payload strictly follows the structure of the ECF, but simplifies some formats (e.g., dates can be YYYY-MM-DD).
+
+### JSON Skeleton
+
+```json
+{
+  "Encabezado": {
+    "IdDoc": {
+      "TipoeCF": 31,
+      "eNCF": "E3100000001",
+      "TipoIngresos": 1, 
+      "TipoPago": 1,
+      "FechaLimitePago": "2023-12-31"
+    },
+    "Emisor": {
+      "RNCEmisor": "101010101",
+      "RazonSocialEmisor": "Tu Empresa S.R.L",
+      "FechaEmision": "2023-10-27",
+      "DireccionEmisor": "Calle Principal #123"
+    },
+    "Comprador": {
+      "RNCComprador": "202020202",
+      "RazonSocialComprador": "Cliente S.R.L"
+    },
+    "Totales": {
+      "MontoGravadoTotal": 100.00,
+      "TotalITBIS": 18.00,
+      "MontoTotal": 118.00
+    }
+  },
+  "DetallesItems": [
+    {
+      "NumeroLinea": 1,
+      "IndicadorFacturacion": 1,
+      "NombreItem": "Servicio de Consultoría",
+      "CantidadItem": 1,
+      "PrecioUnitarioItem": 100.00,
+      "MontoItem": 100.00
+    }
+  ]
+}
+```
+
+### Important Field Rules
+
+1.  **TipoIngresos**: Send as integer (`1`) or string (`"01"`). The API automatically formats it to 2 digits (`01`).
+2.  **Dates**: Send as `YYYY-MM-DD`. The API converts them to `DD-MM-YYYY`.
+3.  **Amounts**: Send as numbers or strings. The API formats them with 2 decimals (e.g., `100.00`).
+4.  **Emisor/Comprador Fields**: Ensure all required fields (RNC, Razon Social) are present.
+5.  **Signature**: The API adds a placeholder `<Signature>` element to satisfy XSD validation. You must sign this XML before sending to DGII.
+
+## Usage Examples
+
+### 1. Nota de Crédito (Type 34)
+
+**Important**: Requires `IndicadorNotaCredito` in `IdDoc` and `InformacionReferencia` block.
+
+```json
+{
+  "Encabezado": {
+    "IdDoc": {
+      "TipoeCF": 34,
+      "eNCF": "E3400000001",
+      "IndicadorNotaCredito": 1, 
+      "TipoIngresos": 1,
+      "TipoPago": 1,
+      "FechaLimitePago": "2023-12-31"
+    },
+    "Emisor": {
+      "RNCEmisor": "131793916",
+      "RazonSocialEmisor": "Desarrollos Web DO",
+      "DireccionEmisor": "Av. Winston Churchill",
+      "FechaEmision": "2023-10-27"
+    },
+    "Comprador": {
+      "RNCComprador": "101669221",
+      "RazonSocialComprador": "Cliente Prueba"
+    },
+    "Totales": {
+      "MontoGravadoTotal": 1000.00,
+      "MontoGravadoI1": 1000.00,
+      "TotalITBIS": 180.00,
+      "TotalITBIS1": 180.00,
+      "MontoTotal": 1180.00
+    }
+  },
+  "DetallesItems": [
+    {
+      "NumeroLinea": 1,
+      "IndicadorFacturacion": 1,
+      "NombreItem": "Devolucion Servicio",
+      "IndicadorBienoServicio": 2,
+      "CantidadItem": 1,
+      "PrecioUnitarioItem": 1000.00,
+      "MontoItem": 1000.00
+    }
+  ],
+  "InformacionReferencia": {
+      "NCFModificado": "E310000000001",
+      "CodigoModificacion": 1,
+      "RazonModificacion": "Devolucion por servicio no conforme",
+      "FechaNCFModificado": "2023-10-20"
+  }
+}
+```
+
+### 2. Factura de Consumo (Type 32) (No RNC Comprador)
+
+```json
+{
+  "Encabezado": {
+    "IdDoc": {
+      "TipoeCF": 32,
+      "eNCF": "E3200000001",
+      "TipoIngresos": 1,
+      "TipoPago": 1
+    },
+    "Emisor": {
+      "RNCEmisor": "131793916",
+      "RazonSocialEmisor": "Desarrollos Web DO",
+      "DireccionEmisor": "Av. Winston Churchill",
+      "FechaEmision": "2023-10-27"
+    },
+    "Comprador": {
+       "RazonSocialComprador": "Cliente Final (Sin RNC)"
+    },
+    "Totales": {
+      "MontoGravadoTotal": 500.00,
+      "TotalITBIS": 90.00,
+      "MontoTotal": 590.00
+    }
+  },
+  "DetallesItems": [
+    {
+      "NumeroLinea": 1,
+      "IndicadorFacturacion": 1,
+      "NombreItem": "Producto Consumo",
+      "CantidadItem": 1,
+      "PrecioUnitarioItem": 500.00,
+      "MontoItem": 500.00
+    }
+  ]
+}
+```

@@ -1,0 +1,48 @@
+{
+  "Encabezado": {
+    "IdDoc": {
+      "TipoeCF": 34,
+      "eNCF": "E3400000001",
+      "IndicadorNotaCredito": 1,
+      "TipoIngresos": 1,
+      "TipoPago": 1,
+      "FechaLimitePago": "2023-12-31"
+    },
+    "Emisor": {
+      "RNCEmisor": "101010101",
+      "RazonSocialEmisor": "Emisor de Prueba",
+      "FechaEmision": "2023-10-27"
+    },
+    "Comprador": {
+      "RNCComprador": "202020202",
+      "RazonSocialComprador": "Cliente de Prueba"
+    },
+    "Totales": {
+      "MontoGravadoTotal": 100.00,
+      "MontoGravadoI1": 100.00,
+      "TotalITBIS": 18.00,
+      "TotalITBIS1": 18.00,
+      "MontoTotal": 118.00
+    },
+    "OtraMoneda": {
+        "TipoMoneda": "USD",
+        "TipoCambio": 58.00
+    }
+  },
+  "DetallesItems": [
+    {
+      "NumeroLinea": 1,
+      "IndicadorFacturacion": 1,
+      "NombreItem": "Devolucion Producto A",
+      "CantidadItem": 1,
+      "PrecioUnitarioItem": 100.00,
+      "MontoItem": 100.00,
+      "DescuentoMonto": 0.00
+    }
+  ],
+  "InformacionReferencia": {
+      "NCFModificado": "E3100000001",
+      "CodigoModificacion": 1,
+      "RazonModificacion": "Devolucion por daño"
+  }
+}
